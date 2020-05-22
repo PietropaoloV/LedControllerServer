@@ -17,7 +17,7 @@ void initMatrix();
 
 int main() {
 	initMatrix();
-	LeagueFlashAnimation *lFa = new LeagueFlashAnimation('q', "LeagueFlashAnimation" , "test.csv", true, sizeX, sizeY);
+	LeagueFlashAnimation *lFa = new LeagueFlashAnimation('q', "LeagueFlashAnimation" , "test.csv", true, sizeX, sizeY, 240, 40);
 	Game *league = new Game("League", "./League" );
 	Character *sion = new Character("Sion", "./League/Sion");
 	sion->putAnimation(lFa);
@@ -34,11 +34,12 @@ int main() {
 		if (animation){
 			std::vector<Frame*> listOfFrames = animation->keyPressed();
  			for(unsigned int i=0; i < listOfFrames.size(); i++) {
- 				//system("clear");
+ 				system("clear");
  				Frame *currentFrame = listOfFrames[i];
- 				//std::cout<< "Frame " << i << ":" << std::endl;
+ 				std::cout<< "Frame " << i << ":" << std::endl;
  				printUpdateScreen(currentFrame);
-				//std::cout << std::endl;
+ 				std::this_thread::sleep_for(std::chrono::milliseconds(250));
+				std::cout << std::endl;
 			}
 		}
 	}
@@ -53,9 +54,9 @@ void printMatrix(){
         int red  = currentPixel->getRed(); 
  		int blue = currentPixel->getBlue();
  		int green = currentPixel->getGreen(); 
-       // std::cout << "(" << red << "," << green << "," << blue <<") "; 
+        std::cout << "(" << red << "," << green << "," << blue <<") "; 
    }
- // std::cout << std::endl;
+  std::cout << std::endl;
 }
 }
 void initMatrix(){
@@ -73,12 +74,12 @@ void printUpdateScreen(Frame *currentFrame){
  		int red  = currentPixel->getRed(); 
  		int blue = currentPixel->getBlue();
  		int green = currentPixel->getGreen();
- 		//std::cout << xLoc << ",";
- 		//std::cout << yLoc << ",";
- 		//std::cout << red  << ",";
- 		//std::cout << green  << ",";
- 		//std::cout << blue;
- 		//std::cout << std::endl;
+ 		std::cout << xLoc << ",";
+ 		std::cout << yLoc << ",";
+ 		std::cout << red  << ",";
+ 		std::cout << green  << ",";
+ 		std::cout << blue;
+ 		std::cout << std::endl;
  		printUpdatePixel(currentPixel);
 
 	}
@@ -88,9 +89,9 @@ void printUpdateScreen(Frame *currentFrame){
         int red  = currentPixel->getRed(); 
  		int blue = currentPixel->getBlue();
  		int green = currentPixel->getGreen(); 
-        //std::cout << "(" << red << "," << green << "," << blue <<") "; 
+        std::cout << "(" << red << "," << green << "," << blue <<") "; 
    }
-   //std::cout << std::endl;
+   std::cout << std::endl;
 }
 }
 void printUpdatePixel(Pixel *currentPixel){

@@ -1,4 +1,5 @@
 #include "Frame.h"
+#include "Key.h"
 #include <string>
 class Animation{
   /*
@@ -9,7 +10,9 @@ class Animation{
 
   */
   //TO-DO may need to make custom key type
-    char key; // Key affected by press
+    Key *key; // Key affected by press
+    int duration; //number of ticks an animation lasts
+    int velocity; //speed at which animaitions occur
     std::string name; //name of the RenderedAnimation
     std::string filePath; //location of renderedAnimation
     bool cancellable; // Is the RenderedAnimation cancellable
@@ -17,23 +20,45 @@ class Animation{
 
   public:
 
-    Animation(char key, std::string name,
-              std::string filePath, bool cancellable, int sizeX, int sizeY){
+    Animation(Key *key, std::string name,
+              std::string filePath, bool cancellable, int sizeX, int sizeY, int duration, int velocity){
       this -> name = name;
       this -> cancellable = cancellable;
       this -> filePath = filePath;
       this -> key = key;
+      this -> duration = duration;
+      this -> velocity = velocity;
       }
 
-    char getKey(){return key;}
+    Key* getKey(){return key;}
     std::string getName(){return name;}
     bool isCancellable(){return cancellable;}
     std::vector<Frame*> keyPressed(){return frames;}
     void addFrame(Frame *frame){frames.push_back(frame);}
-    virtual void createAnimation(int sizeX, int sizeY) = 0;
+    virtual void createAnimation(int sizeX, int sizeY, int duration, int velocity) = 0;
     
 
   private:
     int loadFramesFromDisk(){return 1;}
     int saveFramesToDisk(){return 1;}
+};
+class LeagueFlashAnimation: public Animation{
+public:
+  typedef Animation super;
+  LeagueFlashAnimation(Key* key, std::string name,
+              std::string filePath, bool cancellable, int sizeX, int sizeY, int duration, int velocity) : super(key, name,
+              filePath, cancellable, sizeX, sizeY, duration, velocity){
+              //To-Do make it so that it check disk before creating
+              //after creating save to folder with size and then use name of the animation 
+                createAnimation(sizeX, sizeY, duration, velocity);
+              }
+   void createAnimation(int sizeX, int sizeY, int duration, int velocity){
+    for (int i = 0; i< duration; i++){
+    
+          Frame *frame = new Frame(1);
+          frame->addPixel(new Pixel(255,255,255,100,0,(int)i/velocity));
+          super::addFrame(frame);
+  }
+}
+
 };
