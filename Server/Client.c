@@ -20,7 +20,7 @@
 #include <string.h> 
 #include <sstream> 
 #include "Message.h"
-#define PORT 8876 
+#define PORT 10000
    
 std::string serialize(Message *m);
 int init();
@@ -41,9 +41,9 @@ int main(int argc, char const *argv[])
     Message * m = new Message(key, "Test Character", "Test Game", 0 );
     std::string dataToSend = serialize(m);
     std::cout<< dataToSend << std::endl;
-    uint32_t dataLength = htonl(sizeof(dataToSend)); // Ensure network byte order 
+    // uint32_t dataLength = htonl(sizeof(dataToSend)); // Ensure network byte order 
                                                 // when sending the data length
-    send(socket, &dataLength ,sizeof(uint32_t ) , 0); // Send the data length
+    // send(socket, &dataLength ,sizeof(uint32_t ) , 0); // Send the data length
     send(socket,dataToSend.c_str(),dataToSend.size(), 0); 
     return 0; 
 } 
@@ -70,21 +70,10 @@ int init(){
   int sock = 0, valread; 
     struct sockaddr_in serv_addr;
     
-    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
-    { 
-        printf("\n Socket creation error \n"); 
-        return -1; 
-    } 
-   
-    serv_addr.sin_family = AF_INET; 
+    sock = socket(AF_INET, SOCK_DGRAM, 0);
+    serv_addr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
     serv_addr.sin_port = htons(PORT); 
-       
-    // Convert IPv4 and IPv6 addresses from text to binary form 
-    if(inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr)<=0)  
-    { 
-        printf("\nInvalid address/ Address not supported \n"); 
-        return -1; 
-    } 
+    serv_addr.sin_family = AF_INET; 
    
     if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) 
     { 
