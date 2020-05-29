@@ -41,9 +41,9 @@ int main(int argc, char const *argv[])
     Message * m = new Message(key, "Test Character", "Test Game", 0 );
     std::string dataToSend = serialize(m);
     std::cout<< dataToSend << std::endl;
-    // uint32_t dataLength = htonl(sizeof(dataToSend)); // Ensure network byte order 
+    uint32_t dataLength = htonl(sizeof(dataToSend)); // Ensure network byte order 
                                                 // when sending the data length
-    // send(socket, &dataLength ,sizeof(uint32_t ) , 0); // Send the data length
+    send(socket, &dataLength ,sizeof(uint32_t ) , 0); // Send the data length
     send(socket,dataToSend.c_str(),dataToSend.size(), 0); 
     return 0; 
 } 
