@@ -1,3 +1,5 @@
+from colr import color
+import os
 class Pixel:
 	def __init__(self, red, green, blue, brightness, xLoc, yLoc):
 		self.red = red;
@@ -122,8 +124,6 @@ class Character:
 
 
 class Game:
-	
-
 	def __init__(self, name, characterFolder):
 		self.name = name
 		self.charcterFolder = characterFolder
@@ -171,9 +171,77 @@ class Message:
 	
 	def getKey(self):
 		return self.key
-	def getCharacter(self):
+	def getCharacterName(self):
 		return self.character
-	def getGame(self):
+	def getGameName(self):
 		return self.game
 	def getOptMode(self):
 		return self.operationMode
+
+class LedMatrix:
+	def __init__(self, sizeX, sizeY):
+		self.sizeX = sizeX
+		self.sizeY = sizeY
+		self.matrix = []
+		for x in range(0, sizeX):
+			yList = []
+			for y in range(0,  sizeY):
+				yList.append(Pixel(0, 0, 0, 100, 0, 0))
+			self.matrix.append(yList)
+
+	def getMatrix(self):
+		return self.matrix
+
+	def getSizeX(self):
+		return self.sizeX
+
+	def getSizeY(self):
+		return self.sizeY
+
+	def printMatrix(self):
+		for x in range(0, len(self.matrix)):
+			for y in range(0,  len(self.matrix[x])):
+				pixel = self.matrix[x][y]
+				red  = pixel.getRed() 
+				blue = pixel.getBlue()
+				green = pixel.getGreen() 
+				string = "(" + str(red) + "," + str(green) + "," + str(blue) +")"
+				print(color("         ", fore=(0 , 0, 0), back=(red , green, blue)),end = ' , ')
+			print("\n")
+		os.system('cls' if os.name == 'nt' else 'clear')
+	def playFrame(self, currentFrame, print = 0):
+		for x in range(0, len(currentFrame.getPixels())):
+			currentPixel = currentFrame.getPixels()[x]
+			self.updatePixel(currentPixel)
+		if (print == 1):
+			self.printMatrix()
+	
+
+	def border(self, check , bound):
+		if (check < 0):
+			return 0;
+		if (check > bound):
+			return bound-1
+		return check
+
+	def updatePixel(self, currentPixel):
+		xLoc = currentPixel.getXLoc()
+		yLoc = currentPixel.getYLoc()
+		red  = currentPixel.getRed() 
+		blue = currentPixel.getBlue()
+		green = currentPixel.getGreen()
+		xLoc = self.border(xLoc, len(self.matrix))
+		yLoc = self.border(yLoc, len(self.matrix[0]))
+		ledPixel = self.matrix[xLoc][yLoc]
+		ledPixel.setRed(red)
+		ledPixel.setBlue(blue)
+		ledPixel.setGreen(green)
+		
+	def clearMatrix(self):
+		for x in range(0, len(self.matrix)):
+			for y in range(0,  len(self.matrix[x])):
+				ledPixel = self.matrix[x][y]
+				ledPixel.setRed(0)
+				ledPixel.setBlue(0)
+				ledPixel.setGreen(0)
+

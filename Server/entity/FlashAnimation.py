@@ -28,7 +28,7 @@ class LeagueFlashAnimation(Animation):
 		midDown = middleY-1
 		midUp = middleY-1
 		firstTimeStep = 0
-		print(sizeX, sizeY,middleX, middleY, frameStepX, frameStepY)
+		#print(sizeX, sizeY,middleX, middleY, frameStepX, frameStepY)
 		for x in range(self.duration):
 			frame = Frame()
 			if (x % frameStepY == 0):

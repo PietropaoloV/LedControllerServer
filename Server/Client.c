@@ -20,7 +20,7 @@
 #include <string.h> 
 #include <sstream> 
 #include "Message.h"
-#define PORT 10000
+#define PORT 10001
    
 std::string serialize(Message *m);
 int init();
