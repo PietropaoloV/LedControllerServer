@@ -9,12 +9,14 @@ from Entity import LedMatrix
 from Entity import Character
 from Entity import Pixel
 from FlashAnimation import LeagueFlashAnimation
+from SmiteAnimation import LeagueSmiteAnimation
+from UdyrAnimation import UdyrAnimation 
 from Entity import Key
 from Entity import Message
 
 
 # from rpi_ws281x import Color, PixelStrip, ws
-LED_COUNT = 121    # Number of LED pixels.
+LED_COUNT = 250    # Number of LED pixels.
 LED_PIN = 18           # GPIO pin connected to the pixels (must support PWM!).
 LED_FREQ_HZ = 800000   # LED signal frequency in hertz (usually 800khz)
 LED_DMA = 10           # DMA channel to use for generating signal (try 10)
@@ -23,8 +25,8 @@ LED_INVERT = False     # True to invert the signal (when using NPN transistor le
 LED_CHANNEL = 0
 FPS = 600
 # LED_STRIP = ws.SK6812_STRIP_RGBW
-sizeX = 11;
-sizeY = 11;
+sizeX = 10;
+sizeY = 25;
 leds = LedMatrix(sizeX, sizeY)
 
 def memory_usage_psutil():
@@ -53,13 +55,23 @@ def main():
     leds.clearMatrix()
     if (checkDimensions()):
         exit(1)
-    leagueFlashAnimation = LeagueFlashAnimation(Key('q', bool(0) ), 30 , FPS, "LeagueFlashAnimation" , "test.csv", bool(1), sizeX, sizeY);
+    leagueFlashAnimation = LeagueFlashAnimation(Key('f', bool(0) ), 30 , FPS, "LeagueFlashAnimation" , "test.csv", bool(1), sizeX, sizeY);
+    leagueSmiteAnimation = LeagueSmiteAnimation(Key('d', bool(0) ), 15 , FPS, "LeagueSmiteAnimation " , "test.csv", bool(1), sizeX, sizeY);
+    udyrQAnimation = UdyrAnimation(Key('q', bool(0) ), 15 , FPS, "Tiger" , "test.csv", bool(1), sizeX, sizeY,255,0,0,);
+    udyrWAnimation = UdyrAnimation(Key('w', bool(0) ), 15 , FPS, "Turtle" , "test.csv", bool(1), sizeX, sizeY,0,255,0);
+    udyrEAnimation = UdyrAnimation(Key('e', bool(0) ), 15 , FPS, "Bear" , "test.csv", bool(1), sizeX, sizeY,0,0,255);
+    udyrRAnimation = UdyrAnimation(Key('r', bool(0) ), 15 , FPS, "Pheonix" , "test.csv", bool(1), sizeX, sizeY,255,0,255);
     league = Game("League", "./League" );
-    sion = Character("Sion", "./League/Sion");
-    sion.putAnimation(leagueFlashAnimation);
-    league.putCharacter(sion);
+    udyr = Character("udyr", "./League/Udyr");
+    udyr.putAnimation(leagueFlashAnimation);
+    udyr.putAnimation(leagueSmiteAnimation);
+    udyr.putAnimation(udyrQAnimation);
+    udyr.putAnimation(udyrWAnimation);
+    udyr.putAnimation(udyrEAnimation);
+    udyr.putAnimation(udyrRAnimation);
+    league.putCharacter(udyr);
     socket = createServer("127.0.0.1", 10001)
-    i = league.selectCharacter("Sion");
+    i = league.selectCharacter("udyr");
     while(True):
         leds.clearMatrix()
         message = None
@@ -67,6 +79,7 @@ def main():
         while (message == None):
             data = listenToClient(socket)
             message = ms.deserialize(data)
+        print(message)
 
         operationBit = int(message.getOptMode())
         game = message.getGameName()
@@ -80,7 +93,7 @@ def main():
                     for x in range(0,len(listOfFrames)) :
                         currentFrame = listOfFrames[x];
                         print("Current Frame", x)
-                        leds.playFrame(currentFrame, 0) 
+                        leds.playFrame(currentFrame, 1) 
                     print(memory_usage_psutil())
         # if (operationBit == 1):
         # if (operationBit == 2):

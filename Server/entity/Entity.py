@@ -220,7 +220,7 @@ class LedMatrix:
 	def border(self, check , bound):
 		if (check < 0):
 			return 0;
-		if (check > bound):
+		if (check >= bound):
 			return bound-1
 		return check
 
